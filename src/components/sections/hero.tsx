@@ -12,7 +12,7 @@ export async function Hero() {
       aria-label="Introduction"
       className="relative flex min-h-[100svh] flex-col justify-center px-6 pt-20 sm:pt-24"
     >
-      <div className="mx-auto grid w-full max-w-5xl items-center gap-12 lg:grid-cols-[1.1fr_0.9fr]">
+      <div className="mx-auto grid w-full max-w-6xl items-center gap-12 lg:grid-cols-[1.1fr_0.9fr]">
         <div>
           <p className="mb-3 flex items-center gap-2 font-mono text-xs tracking-[0.3em] text-muted-foreground uppercase">
             Pixel
@@ -25,11 +25,11 @@ export async function Hero() {
           <p className="mb-6 font-mono text-sm text-primary">
             {profile.role} · {profile.location}
           </p>
-          <h1 className="max-w-4xl text-balance text-5xl font-semibold leading-[1.05] tracking-tight text-foreground sm:text-6xl md:text-7xl">
-            {profile.name}
+          <h1 className="max-w-xl text-balance text-4xl font-semibold leading-[1.15] tracking-tight text-foreground sm:text-5xl md:text-6xl">
+            Crafting pixel-perfect web experiences.
           </h1>
-          <p className="mt-6 max-w-2xl text-balance text-lg text-muted-foreground sm:text-xl">
-            {profile.tagline}
+          <p className="mt-6 max-w-lg text-balance text-base leading-relaxed text-muted-foreground sm:text-lg">
+            {profile.tagline || "Specialized in building fast, scalable, and beautifully interactive interfaces with React, Next.js, and modern web technologies."}
           </p>
           <div className="mt-10 flex flex-wrap items-center gap-4">
             <a href="#projects" className={buttonVariants({ size: "lg" })}>
@@ -46,8 +46,19 @@ export async function Hero() {
         </div>
 
         <LetterParticles
-          letter="H"
-          className="hidden aspect-square w-full lg:block"
+          letters={[
+            "React",
+            "Next.js",
+            "TypeScript",
+            "Tailwind",
+            "JavaScript",
+            "HTML5",
+            "Figma",
+            "Git",
+            "WordPress",
+            "H",
+          ]}
+          className="hidden aspect-square w-full max-w-md justify-self-center lg:block"
         />
       </div>
 

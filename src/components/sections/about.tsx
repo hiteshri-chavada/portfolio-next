@@ -22,7 +22,7 @@ export async function About() {
       aria-labelledby="about-heading"
       className="border-t border-border px-6 py-24"
     >
-      <div className="mx-auto max-w-5xl">
+      <div className="mx-auto max-w-6xl">
         <h2 id="about-heading" className="sr-only">
           About
         </h2>

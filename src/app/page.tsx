@@ -13,7 +13,10 @@ export default async function Home() {
 
   return (
     <>
-      <SiteHeader name={profile?.name ?? "Hiteshri Chavda"} />
+      <SiteHeader
+        name={profile?.name ?? "Hiteshri Chavda"}
+        role={profile?.role ?? "Frontend Developer"}
+      />
       <main id="main" className="flex-1">
         <Hero />
         <About />

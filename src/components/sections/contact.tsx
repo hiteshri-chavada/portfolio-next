@@ -60,23 +60,13 @@ export async function Contact() {
       aria-labelledby="contact-heading"
       className="border-t border-border px-6 py-24"
     >
-      <div className="mx-auto max-w-5xl">
+      <div className="mx-auto max-w-6xl">
         <h2 id="contact-heading" className="sr-only">
           Contact
         </h2>
 
-        <div className="mb-12 flex flex-wrap items-center gap-3">
+        <div className="mb-12">
           <p className="font-mono text-sm text-primary">05 - Contact</p>
-          <span
-            className="inline-flex items-center gap-1.5 rounded-full border border-border px-2.5 py-1 text-xs text-muted-foreground"
-            role="status"
-          >
-            <span className="relative flex size-1.5">
-              <span className="absolute inline-flex size-full animate-ping rounded-full bg-primary opacity-75 motion-reduce:hidden" />
-              <span className="relative inline-flex size-1.5 rounded-full bg-primary" />
-            </span>
-            Available for new projects
-          </span>
         </div>
 
         <div className="grid gap-16 lg:grid-cols-2 lg:gap-10">

@@ -10,7 +10,7 @@ export async function Experience() {
       aria-labelledby="experience-heading"
       className="border-t border-border px-6 py-24"
     >
-      <div className="mx-auto max-w-5xl">
+      <div className="mx-auto max-w-6xl">
         <h2 id="experience-heading" className="sr-only">
           Experience
         </h2>
