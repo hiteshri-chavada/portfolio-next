@@ -10,9 +10,9 @@ export async function Hero() {
     <section
       id="hero"
       aria-label="Introduction"
-      className="relative flex min-h-[100svh] flex-col justify-center px-6 pt-20 sm:pt-24"
+      className="relative flex min-h-[100svh] flex-col justify-center px-6 pt-24 pb-16 sm:pt-24 sm:pb-0"
     >
-      <div className="mx-auto grid w-full max-w-6xl items-center gap-12 lg:grid-cols-[1.1fr_0.9fr]">
+      <div className="mx-auto grid w-full max-w-6xl items-center gap-10 sm:gap-12 lg:grid-cols-[1.1fr_0.9fr]">
         <div>
           <p className="mb-3 flex items-center gap-2 font-mono text-xs tracking-[0.3em] text-muted-foreground uppercase">
             Pixel

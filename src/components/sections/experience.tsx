@@ -8,7 +8,7 @@ export async function Experience() {
     <section
       id="experience"
       aria-labelledby="experience-heading"
-      className="border-t border-border px-6 py-24"
+      className="border-t border-border px-6 py-16 sm:py-20 md:py-24"
     >
       <div className="mx-auto max-w-6xl">
         <h2 id="experience-heading" className="sr-only">
@@ -19,7 +19,7 @@ export async function Experience() {
           {experience.map((job, i) => (
             <li
               key={job._id}
-              className="grid gap-4 border-b border-border py-10 md:grid-cols-[220px_1fr] md:gap-10"
+              className="grid gap-4 border-b border-border py-8 sm:py-10 md:grid-cols-[220px_1fr] md:gap-10"
             >
               <div>
                 <p className="mb-2 font-mono text-xs tracking-widest text-primary uppercase">

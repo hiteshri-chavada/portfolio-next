@@ -58,27 +58,27 @@ export async function Contact() {
     <section
       id="contact"
       aria-labelledby="contact-heading"
-      className="border-t border-border px-6 py-24"
+      className="border-t border-border px-6 py-16 sm:py-20 md:py-24"
     >
       <div className="mx-auto max-w-6xl">
         <h2 id="contact-heading" className="sr-only">
           Contact
         </h2>
 
-        <div className="mb-12">
+        <div className="mb-8 sm:mb-10 md:mb-12">
           <p className="font-mono text-sm text-primary">05 - Contact</p>
         </div>
 
-        <div className="grid gap-16 lg:grid-cols-2 lg:gap-10">
+        <div className="grid gap-10 sm:gap-12 lg:grid-cols-2 lg:gap-10">
           <div>
-            <h3 className="text-balance text-4xl font-semibold tracking-tight text-foreground sm:text-5xl">
+            <h3 className="text-balance text-3xl font-semibold tracking-tight text-foreground sm:text-4xl md:text-5xl">
               Let&rsquo;s build something great together.
             </h3>
-            <p className="mt-6 max-w-md text-balance text-lg text-muted-foreground">
+            <p className="mt-4 sm:mt-6 max-w-md text-balance text-base sm:text-lg text-muted-foreground">
               Share your goals, timeline, and what it&rsquo;ll take to ship
               it - I&rsquo;ll get back to you shortly.
             </p>
-            <div className="mt-10">
+            <div className="mt-8 sm:mt-10">
               <a
                 href={`mailto:${settings.email}`}
                 className={buttonVariants({ size: "lg" })}

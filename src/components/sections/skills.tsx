@@ -8,7 +8,7 @@ export async function Skills() {
     <section
       id="skills"
       aria-labelledby="skills-heading"
-      className="border-t border-border px-6 py-24"
+      className="border-t border-border px-6 py-16 sm:py-20 md:py-24"
     >
       <div className="mx-auto max-w-6xl">
         <h2 id="skills-heading" className="sr-only">

@@ -9,7 +9,7 @@ export async function Projects() {
     <section
       id="projects"
       aria-labelledby="projects-heading"
-      className="border-t border-border px-6 py-24"
+      className="border-t border-border px-6 py-16 sm:py-20 md:py-24"
     >
       <div className="mx-auto max-w-6xl">
         <h2 id="projects-heading" className="sr-only">
