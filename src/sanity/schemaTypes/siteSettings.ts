@@ -36,6 +36,32 @@ export const siteSettings = defineType({
         defineField({ name: "detail", title: "Detail", type: "string" }),
       ],
     }),
+    defineField({
+      name: "navLinks",
+      title: "Header Navigation",
+      description:
+        "Links shown in the site header. Href should point to a section id on the page, e.g. #about.",
+      type: "array",
+      of: [
+        {
+          type: "object",
+          name: "navLink",
+          fields: [
+            defineField({ name: "label", title: "Label", type: "string", validation: (r) => r.required() }),
+            defineField({
+              name: "href",
+              title: "Href",
+              type: "string",
+              description: "e.g. #about, #skills, #experience, #projects, #contact",
+              validation: (r) => r.required(),
+            }),
+          ],
+          preview: {
+            select: { title: "label", subtitle: "href" },
+          },
+        },
+      ],
+    }),
   ],
   preview: {
     select: { title: "name", subtitle: "role" },

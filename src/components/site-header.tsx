@@ -1,7 +1,16 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { ArrowUpRight, Menu, FileText } from "lucide-react";
+import {
+  ArrowUpRight,
+  Briefcase,
+  FileText,
+  FolderKanban,
+  Mail,
+  Menu,
+  Sparkles,
+  User,
+} from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { SiteLogo } from "@/components/site-logo";
 import {
@@ -11,16 +20,26 @@ import {
   SheetTitle,
   SheetTrigger,
 } from "@/components/ui/sheet";
-import { navLinks } from "@/lib/data";
+import { navLinks as defaultNavLinks } from "@/lib/data";
 
 interface SiteHeaderProps {
   name?: string;
   role?: string;
+  navLinks?: readonly { label: string; href: string }[];
 }
+
+const mobileNavIcons: Record<string, typeof User> = {
+  "#about": User,
+  "#skills": Sparkles,
+  "#experience": Briefcase,
+  "#projects": FolderKanban,
+  "#contact": Mail,
+};
 
 export function SiteHeader({
   name = "Hiteshri Chavda",
   role = "Frontend Developer",
+  navLinks = defaultNavLinks,
 }: SiteHeaderProps) {
   const [open, setOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
@@ -30,7 +49,9 @@ export function SiteHeader({
     const handleScroll = () => {
       setScrolled(window.scrollY > 20);
 
-      const sections = ["about", "skills", "experience", "projects", "contact"];
+      const sections = navLinks
+        .map((link) => link.href.replace("#", ""))
+        .filter(Boolean);
       const current = sections.find((section) => {
         const el = document.getElementById(section);
         if (el) {
@@ -45,8 +66,9 @@ export function SiteHeader({
     };
 
     window.addEventListener("scroll", handleScroll);
+    handleScroll();
     return () => window.removeEventListener("scroll", handleScroll);
-  }, []);
+  }, [navLinks]);
 
   return (
     <header
@@ -59,7 +81,6 @@ export function SiteHeader({
         <div className="flex items-center">
           <a
             href="#hero"
-            aria-label="Home"
             className="flex items-center py-1 outline-none focus-visible:ring-2 focus-visible:ring-ring"
           >
             <SiteLogo name={name} role={role} />
@@ -76,13 +97,20 @@ export function SiteHeader({
                   <li key={link.href}>
                     <a
                       href={link.href}
+                      aria-current={isActive ? "true" : undefined}
                       className={`relative px-4 py-2 text-sm font-medium transition-all duration-200 ${
                         isActive
-                          ? "bg-muted text-foreground font-semibold"
+                          ? "text-foreground font-semibold"
                           : "text-muted-foreground hover:bg-muted/60 hover:text-foreground"
                       }`}
                     >
                       {link.label}
+                      <span
+                        aria-hidden="true"
+                        className={`absolute inset-x-4 -bottom-px h-0.5 bg-primary transition-transform duration-200 ${
+                          isActive ? "scale-x-100" : "scale-x-0"
+                        }`}
+                      />
                     </a>
                   </li>
                 );
@@ -115,22 +143,14 @@ export function SiteHeader({
         </div>
 
         {/* Mobile Hamburger & Drawer */}
-        <div className="flex items-stretch md:hidden">
-          <a
-            href="#contact"
-            className="flex items-center justify-center gap-1 border-l border-border bg-primary px-4 font-mono text-xs font-bold text-primary-foreground uppercase"
-          >
-            <span>Contact</span>
-            <ArrowUpRight className="size-3" />
-          </a>
-
+        <div className="flex items-center md:hidden">
           <Sheet open={open} onOpenChange={setOpen}>
             <SheetTrigger
               render={
                 <Button
                   variant="ghost"
                   size="icon"
-                  className="h-full rounded-none border-l border-r border-border px-3.5"
+                  className="rounded-full"
                   aria-label="Open menu"
                 />
               }
@@ -155,30 +175,32 @@ export function SiteHeader({
                     Navigation
                   </p>
                   <ul className="flex flex-col space-y-1">
-                    {navLinks.map((link) => (
-                      <li key={link.href}>
-                        <a
-                          href={link.href}
-                          onClick={() => setOpen(false)}
-                          className="flex items-center justify-between px-3.5 py-3 text-base font-medium text-foreground transition-colors hover:bg-muted"
-                        >
-                          <span>{link.label}</span>
-                          <ArrowUpRight className="size-4 text-muted-foreground" />
-                        </a>
-                      </li>
-                    ))}
+                    {navLinks.map((link) => {
+                      const Icon = mobileNavIcons[link.href] ?? ArrowUpRight;
+                      return (
+                        <li key={link.href}>
+                          <a
+                            href={link.href}
+                            onClick={() => setOpen(false)}
+                            className="group flex items-center gap-3 px-3.5 py-3 text-base font-medium text-foreground transition-colors hover:bg-muted"
+                          >
+                            <Icon className="size-4 shrink-0 text-primary" aria-hidden="true" />
+                            <span className="flex-1">{link.label}</span>
+                            <ArrowUpRight className="size-4 text-muted-foreground transition-transform duration-200 group-hover:-translate-y-0.5 group-hover:translate-x-0.5" />
+                          </a>
+                        </li>
+                      );
+                    })}
                     <li>
                       <a
                         href="/Hiteshri_Chavda_Frontend_Developer_Resume.pdf"
                         download
                         onClick={() => setOpen(false)}
-                        className="flex items-center justify-between px-3.5 py-3 text-base font-medium text-foreground transition-colors hover:bg-muted"
+                        className="group flex items-center gap-3 px-3.5 py-3 text-base font-medium text-foreground transition-colors hover:bg-muted"
                       >
-                        <span className="flex items-center gap-2.5">
-                          <FileText className="size-4 text-primary" />
-                          <span>Resume</span>
-                        </span>
-                        <ArrowUpRight className="size-4 text-muted-foreground" />
+                        <FileText className="size-4 shrink-0 text-primary" aria-hidden="true" />
+                        <span className="flex-1">Resume</span>
+                        <ArrowUpRight className="size-4 text-muted-foreground transition-transform duration-200 group-hover:-translate-y-0.5 group-hover:translate-x-0.5" />
                       </a>
                     </li>
                   </ul>

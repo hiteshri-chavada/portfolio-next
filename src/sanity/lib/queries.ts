@@ -29,9 +29,15 @@ export const SITE_SETTINGS_QUERY = defineQuery(`
     github,
     summary,
     tagline,
-    education
+    education,
+    navLinks[]{ label, href }
   }
 `);
+
+export type SanityNavLink = {
+  label: string;
+  href: string;
+};
 
 export type SanitySiteSettings = {
   name: string;
@@ -48,6 +54,7 @@ export type SanitySiteSettings = {
     institution: string;
     detail: string | null;
   } | null;
+  navLinks: SanityNavLink[] | null;
 };
 
 export const SKILL_GROUPS_QUERY = defineQuery(`

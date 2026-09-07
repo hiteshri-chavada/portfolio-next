@@ -24,7 +24,7 @@ export async function Projects() {
             const card = (
               <>
                 <div className="flex items-start justify-between">
-                  <span className="font-mono text-sm text-foreground/25">
+                  <span className="font-mono text-sm text-foreground/60">
                     {String(i + 1).padStart(2, "0")}
                   </span>
                   {project.link && (
@@ -56,10 +56,10 @@ export async function Projects() {
                     href={project.link}
                     target="_blank"
                     rel="noopener noreferrer"
-                    aria-label={`${project.name} (opens in a new tab)`}
                     className={cardClass}
                   >
                     {card}
+                    <span className="sr-only"> (opens in a new tab)</span>
                   </a>
                 ) : (
                   <div className={cardClass}>{card}</div>
