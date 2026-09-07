@@ -58,7 +58,7 @@ export async function Hero() {
             "WordPress",
             "H",
           ]}
-          className="hidden aspect-square w-full max-w-md justify-self-center lg:block"
+          className="mt-8 aspect-square w-full max-w-[220px] justify-self-center sm:max-w-sm lg:mt-0 lg:max-w-md"
         />
       </div>
 

@@ -16,6 +16,11 @@ export default async function Home() {
       <SiteHeader
         name={profile?.name ?? "Hiteshri Chavda"}
         role={profile?.role ?? "Frontend Developer"}
+        navLinks={
+          profile?.navLinks && profile.navLinks.length > 0
+            ? profile.navLinks
+            : undefined
+        }
       />
       <main id="main" className="flex-1">
         <Hero />

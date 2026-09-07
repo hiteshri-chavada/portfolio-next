@@ -78,9 +78,12 @@ export function LetterParticles({
 }) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const onCompleteRef = useRef(onComplete);
-  onCompleteRef.current = onComplete;
   const onFormedChangeRef = useRef(onFormedChange);
-  onFormedChangeRef.current = onFormedChange;
+
+  useEffect(() => {
+    onCompleteRef.current = onComplete;
+    onFormedChangeRef.current = onFormedChange;
+  }, [onComplete, onFormedChange]);
 
   useEffect(() => {
     const canvas = canvasRef.current;
@@ -374,7 +377,7 @@ export function LetterParticles({
       const dotR = size * 0.0055;
       const next: Dot[] = [];
 
-      const count = Math.max(targetPts.length, 360);
+      const count = Math.max(targetPts.length, 260);
 
       for (let i = 0; i < count; i++) {
         const pt = targetPts[i % targetPts.length] || {
@@ -544,18 +547,32 @@ export function LetterParticles({
       pointer.active = false;
     }
 
-    buildInitialDots();
-    resizeCanvas();
+    // Defer the (synchronous, canvas-heavy) initial rasterization off the
+    // critical path so it doesn't add to blocking time during hydration —
+    // this is a purely decorative visual, not needed for first interaction.
+    let idleHandle: number = 0;
 
-    if (!animated || prefersReducedMotion) {
-      draw(formed ? 0 : cycleMs * 0.25);
-    } else {
-      draw(0);
-      raf = requestAnimationFrame(draw);
-      if (interactive) {
-        canvas.addEventListener("pointermove", handlePointerMove);
-        canvas.addEventListener("pointerleave", handlePointerLeave);
+    function start() {
+      if (cancelled) return;
+      buildInitialDots();
+      resizeCanvas();
+
+      if (!animated || prefersReducedMotion) {
+        draw(formed ? 0 : cycleMs * 0.25);
+      } else {
+        draw(0);
+        raf = requestAnimationFrame(draw);
+        if (interactive) {
+          canvas!.addEventListener("pointermove", handlePointerMove);
+          canvas!.addEventListener("pointerleave", handlePointerLeave);
+        }
       }
+    }
+
+    if (typeof window.requestIdleCallback === "function") {
+      idleHandle = window.requestIdleCallback(start, { timeout: 500 });
+    } else {
+      idleHandle = window.setTimeout(start, 1);
     }
 
     const handleResize = () => {
@@ -568,6 +585,11 @@ export function LetterParticles({
 
     return () => {
       cancelled = true;
+      if (typeof window.cancelIdleCallback === "function") {
+        window.cancelIdleCallback(idleHandle);
+      } else {
+        window.clearTimeout(idleHandle);
+      }
       window.removeEventListener("resize", handleResize);
       canvas.removeEventListener("pointermove", handlePointerMove);
       canvas.removeEventListener("pointerleave", handlePointerLeave);
