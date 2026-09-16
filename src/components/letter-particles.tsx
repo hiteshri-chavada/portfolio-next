@@ -12,6 +12,7 @@ type Dot = {
   phase: number;
   speed: number;
   isAccent: boolean;
+  tcolor?: string;
 };
 
 function lerp(a: number, b: number, t: number) {
@@ -24,6 +25,7 @@ const DEFAULT_FONT_FAMILY =
 export function LetterParticles({
   letter = "H",
   letters,
+  photoSrc,
   className,
   masterSize = 320,
   formed = false,
@@ -45,6 +47,8 @@ export function LetterParticles({
   letter?: string;
   /** List of technology icons/monograms to cycle through at each scatter interval */
   letters?: string[];
+  /** Image URL rasterized into a circular photo silhouette; include "photo" in `letters` to cycle to it. */
+  photoSrc?: string;
   className?: string;
   masterSize?: number;
   /** Skip the scatter/assemble cycle and hold a near-formed, gently breathing shape. */
@@ -100,6 +104,21 @@ export function LetterParticles({
     const shapesList = letters && letters.length > 0 ? letters : [letter];
     let currentShapeIndex = 0;
 
+    let photoImg: HTMLImageElement | null = null;
+
+    function loadPhoto(): Promise<void> {
+      if (!photoSrc) return Promise.resolve();
+      return new Promise((resolve) => {
+        const img = new Image();
+        img.onload = () => {
+          photoImg = img;
+          resolve();
+        };
+        img.onerror = () => resolve();
+        img.src = photoSrc;
+      });
+    }
+
     let dots: Dot[] = [];
     const size = masterSize;
     let raf = 0;
@@ -107,10 +126,16 @@ export function LetterParticles({
     const pointer = { x: 0, y: 0, active: false };
     const pointerEased = { x: 0, y: 0 };
     const baseColor = tone === "light" ? "255, 255, 255" : "10, 10, 10";
+    const baseColorParts = baseColor.split(",").map(Number);
 
-    const targetPointsCache: Record<string, { x: number; y: number }[]> = {};
+    const targetPointsCache: Record<
+      string,
+      { x: number; y: number; color?: string }[]
+    > = {};
 
-    function rasterizeTechIcon(shape: string): { x: number; y: number }[] {
+    function rasterizeTechIcon(
+      shape: string
+    ): { x: number; y: number; color?: string }[] {
       const normalizedKey = shape.trim().toLowerCase();
       if (targetPointsCache[normalizedKey]) return targetPointsCache[normalizedKey];
 
@@ -309,6 +334,29 @@ export function LetterParticles({
           break;
         }
 
+        case "photo": {
+          const r = s * 0.42;
+          octx.save();
+          octx.beginPath();
+          octx.arc(cx, cy, r, 0, Math.PI * 2);
+          octx.closePath();
+          octx.clip();
+
+          if (photoImg) {
+            const iw = photoImg.naturalWidth || 1;
+            const ih = photoImg.naturalHeight || 1;
+            const coverScale = Math.max((r * 2) / iw, (r * 2) / ih);
+            const dw = iw * coverScale;
+            const dh = ih * coverScale;
+            octx.drawImage(photoImg, cx - dw / 2, cy - dh / 2, dw, dh);
+          } else {
+            octx.fillStyle = "#000";
+            octx.fillRect(cx - r, cy - r, r * 2, r * 2);
+          }
+          octx.restore();
+          break;
+        }
+
         case "git": {
           // Diamond badge
           octx.save();
@@ -351,17 +399,25 @@ export function LetterParticles({
         }
       }
 
+      const isPhoto = normalizedKey === "photo" && !!photoImg;
       const imageData = octx.getImageData(0, 0, s, s);
-      const step = density ?? Math.max(3, Math.round(s / 46));
-      const points: { x: number; y: number }[] = [];
+      const step = isPhoto
+        ? Math.max(3, Math.round(s / 90))
+        : (density ?? Math.max(3, Math.round(s / 46)));
+      const points: { x: number; y: number; color?: string }[] = [];
 
       for (let y = 0; y < s; y += step) {
         for (let x = 0; x < s; x += step) {
-          const alpha = imageData.data[(y * s + x) * 4 + 3];
+          const idx = (y * s + x) * 4;
+          const alpha = imageData.data[idx + 3];
           if (alpha > 110 && Math.random() < coverage) {
+            const color = isPhoto
+              ? `${imageData.data[idx]}, ${imageData.data[idx + 1]}, ${imageData.data[idx + 2]}`
+              : undefined;
             points.push({
               x: x + (Math.random() - 0.5) * step * 0.6,
               y: y + (Math.random() - 0.5) * step * 0.6,
+              color,
             });
           }
         }
@@ -401,6 +457,7 @@ export function LetterParticles({
           phase: Math.random() * Math.PI * 2,
           speed: Math.random() * 0.5 + 0.75,
           isAccent: Math.random() < 0.12,
+          tcolor: pt.color,
         });
       }
       dots = next;
@@ -414,6 +471,7 @@ export function LetterParticles({
         const pt = targetPts[idx % targetPts.length];
         d.tx = pt.x;
         d.ty = pt.y;
+        d.tcolor = pt.color;
       });
     }
 
@@ -504,9 +562,19 @@ export function LetterParticles({
           (formed ? Math.max(rawOpacity, 0.3) : rawOpacity) * intensity;
 
         const finalRadius = Math.max(d.r * scale, formed ? 0.95 : 0.4);
-        const dotColor = d.isAccent
-          ? `rgba(255, 56, 76, ${opacity})`
-          : `rgba(${baseColor}, ${opacity * 0.85})`;
+        let dotColor: string;
+        if (d.isAccent) {
+          dotColor = `rgba(255, 56, 76, ${opacity})`;
+        } else if (d.tcolor) {
+          const [pr, pg, pb] = d.tcolor.split(",").map(Number);
+          const [br, bg, bb] = baseColorParts;
+          const mixR = Math.round(lerp(br, pr, eased));
+          const mixG = Math.round(lerp(bg, pg, eased));
+          const mixB = Math.round(lerp(bb, pb, eased));
+          dotColor = `rgba(${mixR}, ${mixG}, ${mixB}, ${opacity})`;
+        } else {
+          dotColor = `rgba(${baseColor}, ${opacity * 0.85})`;
+        }
 
         if (glow) {
           ctx!.shadowColor = d.isAccent
@@ -552,7 +620,11 @@ export function LetterParticles({
     // this is a purely decorative visual, not needed for first interaction.
     let idleHandle: number = 0;
 
-    function start() {
+    async function start() {
+      if (cancelled) return;
+      if (shapesList.includes("photo")) {
+        await loadPhoto();
+      }
       if (cancelled) return;
       buildInitialDots();
       resizeCanvas();
@@ -598,6 +670,7 @@ export function LetterParticles({
   }, [
     letter,
     letters,
+    photoSrc,
     masterSize,
     formed,
     tone,

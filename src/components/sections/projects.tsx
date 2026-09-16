@@ -16,10 +16,10 @@ export async function Projects() {
           Projects
         </h2>
         <SectionHeading eyebrow="04 - Projects" title="Selected work" />
-        <ul className="grid gap-px overflow-hidden border border-border bg-border sm:grid-cols-2">
+        <ul className="grid gap-px overflow-hidden border border-border bg-border sm:grid-cols-2 lg:grid-cols-3">
           {projects.map((project, i) => {
             const cardClass =
-              "group flex h-full flex-col justify-between gap-8 bg-background p-8 transition-colors hover:bg-muted sm:p-10";
+              "group flex h-full flex-col justify-between gap-6 bg-background p-6 transition-colors hover:bg-muted";
 
             const card = (
               <>
@@ -30,19 +30,16 @@ export async function Projects() {
                   {project.link && (
                     <ArrowUpRight
                       aria-hidden="true"
-                      className="size-5 text-foreground/25 transition-all group-hover:-translate-y-1 group-hover:translate-x-1 group-hover:text-primary"
+                      className="size-4 text-foreground/25 transition-all group-hover:-translate-y-1 group-hover:translate-x-1 group-hover:text-primary"
                     />
                   )}
                 </div>
 
                 <div>
-                  <h3 className="text-2xl font-semibold tracking-tight text-foreground transition-colors group-hover:text-primary sm:text-3xl">
+                  <h3 className="text-xl font-semibold tracking-tight text-foreground transition-colors group-hover:text-primary">
                     {project.name}
                   </h3>
-                  <p className="mt-3 max-w-md text-sm leading-relaxed text-muted-foreground line-clamp-2">
-                    {project.description}
-                  </p>
-                  <p className="mt-5 font-mono text-xs tracking-widest text-muted-foreground uppercase">
+                  <p className="mt-3 font-mono text-[11px] tracking-widest text-muted-foreground uppercase">
                     {(project.tags ?? []).slice(0, 3).join(" · ")}
                   </p>
                 </div>

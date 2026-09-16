@@ -86,3 +86,23 @@ export type SanityExperience = {
   period: string;
   points: string[] | null;
 };
+
+export const CERTIFICATIONS_QUERY = defineQuery(`
+  *[_type == "certification"] | order(order asc) {
+    _id,
+    title,
+    issuer,
+    issueDate,
+    credentialId,
+    credentialUrl
+  }
+`);
+
+export type SanityCertification = {
+  _id: string;
+  title: string;
+  issuer: string;
+  issueDate: string | null;
+  credentialId: string | null;
+  credentialUrl: string | null;
+};

@@ -1,9 +1,11 @@
 import { client } from "@/sanity/lib/client";
 import {
+  CERTIFICATIONS_QUERY,
   EXPERIENCE_QUERY,
   PROJECTS_QUERY,
   SITE_SETTINGS_QUERY,
   SKILL_GROUPS_QUERY,
+  type SanityCertification,
   type SanityExperience,
   type SanityProject,
   type SanitySiteSettings,
@@ -39,6 +41,14 @@ export function getSkillGroups(): Promise<SanitySkillGroup[]> {
 export function getExperience(): Promise<SanityExperience[]> {
   return client.fetch(
     EXPERIENCE_QUERY,
+    {},
+    { next: { revalidate: REVALIDATE_SECONDS } }
+  );
+}
+
+export function getCertifications(): Promise<SanityCertification[]> {
+  return client.fetch(
+    CERTIFICATIONS_QUERY,
     {},
     { next: { revalidate: REVALIDATE_SECONDS } }
   );

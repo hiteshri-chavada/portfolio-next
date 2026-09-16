@@ -66,7 +66,7 @@ export async function Contact() {
         </h2>
 
         <div className="mb-8 sm:mb-10 md:mb-12">
-          <p className="font-mono text-sm text-primary">05 - Contact</p>
+          <p className="font-mono text-sm text-primary">06 - Contact</p>
         </div>
 
         <div className="grid gap-10 sm:gap-12 lg:grid-cols-2 lg:gap-10">
