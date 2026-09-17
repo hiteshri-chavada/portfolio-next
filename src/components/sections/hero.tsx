@@ -25,7 +25,7 @@ export async function Hero() {
           <p className="mb-6 font-mono text-sm text-primary">
             {profile.role} · {profile.location}
           </p>
-          <h1 className="max-w-xl text-balance text-4xl font-semibold leading-[1.15] tracking-tight text-foreground sm:text-5xl md:text-6xl">
+          <h1 className="max-w-xl text-balance text-4xl font-semibold leading-[1.15] tracking-tight text-foreground capitalize sm:text-5xl md:text-6xl">
             Crafting pixel-perfect web experiences.
           </h1>
           <p className="mt-6 max-w-lg text-balance text-base leading-relaxed text-muted-foreground sm:text-lg">

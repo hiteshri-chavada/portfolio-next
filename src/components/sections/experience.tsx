@@ -25,7 +25,7 @@ export async function Experience() {
                 <p className="mb-2 font-mono text-xs tracking-widest text-primary uppercase">
                   Role {String(i + 1).padStart(2, "0")}
                 </p>
-                <p className="text-lg font-medium text-foreground">
+                <p className="text-lg font-medium text-foreground capitalize">
                   {job.role}
                 </p>
                 <p className="text-primary">{job.company}</p>

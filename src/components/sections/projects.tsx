@@ -36,7 +36,7 @@ export async function Projects() {
                 </div>
 
                 <div>
-                  <h3 className="text-xl font-semibold tracking-tight text-foreground transition-colors group-hover:text-primary">
+                  <h3 className="text-xl font-semibold tracking-tight text-foreground capitalize transition-colors group-hover:text-primary">
                     {project.name}
                   </h3>
                   <p className="mt-3 font-mono text-[11px] tracking-widest text-muted-foreground uppercase">

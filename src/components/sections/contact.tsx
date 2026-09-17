@@ -71,7 +71,7 @@ export async function Contact() {
 
         <div className="grid gap-10 sm:gap-12 lg:grid-cols-2 lg:gap-10">
           <div>
-            <h3 className="text-balance text-3xl font-semibold tracking-tight text-foreground sm:text-4xl md:text-5xl">
+            <h3 className="text-balance text-3xl font-semibold tracking-tight text-foreground capitalize sm:text-4xl md:text-5xl">
               Let&rsquo;s build something great together.
             </h3>
             <p className="mt-4 sm:mt-6 max-w-md text-balance text-base sm:text-lg text-muted-foreground">
