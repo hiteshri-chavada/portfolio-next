@@ -29,6 +29,9 @@ jobs:
           STATIC_EXPORT: "true"
         run: npm run build
 
+      - name: Disable Jekyll processing
+        run: touch out/.nojekyll
+
       - name: Checkout Pages repo
         uses: actions/checkout@v4
         with:
