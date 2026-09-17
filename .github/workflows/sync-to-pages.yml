@@ -1,0 +1,55 @@
+name: Sync to GitHub Pages
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout source
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Remove Studio route from static export
+        run: rm -rf src/app/studio
+
+      - name: Build static export
+        env:
+          STATIC_EXPORT: "true"
+        run: npm run build
+
+      - name: Checkout Pages repo
+        uses: actions/checkout@v4
+        with:
+          repository: hiteshri-chavada/hiteshri-chavada.github.io
+          token: ${{ secrets.PAGES_DEPLOY_TOKEN }}
+          path: pages-repo
+
+      - name: Sync export into Pages repo
+        run: |
+          find pages-repo -mindepth 1 -maxdepth 1 -not -name '.git' -exec rm -rf {} +
+          cp -r out/. pages-repo/
+
+      - name: Commit and push
+        working-directory: pages-repo
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add -A
+          if git diff --cached --quiet; then
+            echo "No changes to deploy"
+            exit 0
+          fi
+          git commit -m "Deploy from ${{ github.repository }}@${{ github.sha }}"
+          git push origin HEAD
